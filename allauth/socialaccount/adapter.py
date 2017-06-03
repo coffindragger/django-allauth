@@ -173,6 +173,8 @@ class DefaultSocialAccountAdapter(object):
         Next to simply returning True/False you can also intervene the
         regular flow by raising an ImmediateHttpResponse
         """
+        if app_settings.OPEN_FOR_SIGNUP is not None:
+            return app_settings.OPEN_FOR_SIGNUP
         return get_account_adapter(request).is_open_for_signup(request)
 
     def get_signup_form_initial_data(self, sociallogin):

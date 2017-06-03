@@ -324,6 +324,10 @@ class AppSettings(object):
         from django.conf import settings
         return 'allauth.account' in settings.INSTALLED_APPS
 
+    @property
+    def OPEN_FOR_SIGNUP(self):
+        return self._setting('OPEN_FOR_SIGNUP', True)
+
 
 # Ugly? Guido recommends this himself ...
 # http://mail.python.org/pipermail/python-ideas/2012-May/014969.html
