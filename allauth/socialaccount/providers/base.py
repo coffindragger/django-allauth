@@ -3,6 +3,7 @@ from django.utils.encoding import python_2_unicode_compatible
 from allauth.socialaccount import app_settings
 
 from ..adapter import get_adapter
+from allauth.account import app_settings as account_settings
 
 
 class AuthProcess(object):
@@ -88,9 +89,13 @@ class Provider(object):
         socialaccount = SocialAccount(extra_data=extra_data,
                                       uid=uid,
                                       provider=self.id)
-        email_addresses = self.extract_email_addresses(response)
-        self.cleanup_email_addresses(common_fields.get('email'),
-                                     email_addresses)
+
+        if account_settings.ACCOUNT_ENABLED:
+            email_addresses = self.extract_email_addresses(response)
+            self.cleanup_email_addresses(common_fields.get('email'),
+                                         email_addresses)
+        else:
+            email_addresses = []
         sociallogin = SocialLogin(account=socialaccount,
                                   email_addresses=email_addresses)
         user = sociallogin.user = adapter.new_user(request, sociallogin)
