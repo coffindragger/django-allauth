@@ -76,7 +76,7 @@ class AppSettings(object):
         """
         Whether or not to allow Social Account signups. If None defaults to AccountAdapter.is_open_for_signup()
         """
-        self._setting("OPEN_FOR_SIGNUP", None)
+        return self._setting("OPEN_FOR_SIGNUP", None)
 
 
 # Ugly? Guido recommends this himself ...
