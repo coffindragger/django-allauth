@@ -7,7 +7,6 @@ from . import app_settings
 from ..account import app_settings as account_settings
 from ..account.adapter import get_adapter as get_account_adapter
 from ..account.app_settings import EmailVerificationMethod
-from ..account.models import EmailAddress
 from ..account.utils import user_email, user_field, user_username
 from ..compat import is_authenticated, reverse
 from ..utils import (
@@ -131,8 +130,9 @@ class DefaultSocialAccountAdapter(object):
                 raise ValidationError(_("Your account has no password set"
                                         " up."))
             # No email address, no password reset
-            if app_settings.EMAIL_VERIFICATION \
+            if account_settings.ACCOUNT_ENABLED and app_settings.EMAIL_VERIFICATION \
                     == EmailVerificationMethod.MANDATORY:
+                from ..account.models import EmailAddress
                 if EmailAddress.objects.filter(user=account.user,
                                                verified=True).count() == 0:
                     raise ValidationError(_("Your account has no verified"
@@ -145,7 +145,7 @@ class DefaultSocialAccountAdapter(object):
             email = user_email(sociallogin.user)
             # Let's check if auto_signup is really possible...
             if email:
-                if account_settings.UNIQUE_EMAIL:
+                if account_settings.ACCOUNT_ENABLED and account_settings.UNIQUE_EMAIL:
                     if email_address_exists(email):
                         # Oops, another user already has this address.
                         # We cannot simply connect this social account

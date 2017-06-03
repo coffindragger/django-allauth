@@ -18,7 +18,6 @@ from ..utils import (
 )
 from .adapter import get_adapter
 from .app_settings import AuthenticationMethod
-from .models import EmailAddress
 from .utils import (
     filter_users_by_email,
     get_user_model,
@@ -421,6 +420,7 @@ class AddEmailForm(UserForm):
         return value
 
     def save(self, request):
+        from .models import EmailAddress
         return EmailAddress.objects.add_email(request,
                                               self.user,
                                               self.cleaned_data["email"],

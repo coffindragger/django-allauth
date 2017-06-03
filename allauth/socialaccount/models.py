@@ -10,12 +10,12 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
 import allauth.app_settings
-from allauth.account.models import EmailAddress
 from allauth.account.utils import get_next_redirect_url, setup_user_email
 from allauth.utils import get_user_model
 
 from . import app_settings, providers
 from ..utils import get_request_param
+from ..account import app_settings as account_settings
 from .adapter import get_adapter
 from .fields import JSONField
 
@@ -216,10 +216,14 @@ class SocialLogin(object):
             token = deserialize_instance(SocialToken, data['token'])
         else:
             token = None
-        email_addresses = []
-        for ea in data['email_addresses']:
-            email_address = deserialize_instance(EmailAddress, ea)
-            email_addresses.append(email_address)
+
+        if account_settings.ACCOUNT_ENABLED:
+            from allauth.account.models import EmailAddress
+            email_addresses = []
+            for ea in data['email_addresses']:
+                email_address = deserialize_instance(EmailAddress, ea)
+                email_addresses.append(email_address)
+
         ret = SocialLogin()
         ret.token = token
         ret.account = account
@@ -244,7 +248,7 @@ class SocialLogin(object):
         if connect:
             # TODO: Add any new email addresses automatically?
             pass
-        else:
+        elif account_settings.ACCOUNT_ENABLED:
             setup_user_email(request, user, self.email_addresses)
 
     @property

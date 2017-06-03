@@ -1,6 +1,5 @@
 from django.utils.encoding import python_2_unicode_compatible
 
-from allauth.account.models import EmailAddress
 from allauth.socialaccount import app_settings
 
 from ..adapter import get_adapter
@@ -131,6 +130,7 @@ class Provider(object):
         return {}
 
     def cleanup_email_addresses(self, email, addresses):
+        from allauth.account.models import EmailAddress
         # Move user.email over to EmailAddress
         if (email and email.lower() not in [
                 a.email.lower() for a in addresses]):

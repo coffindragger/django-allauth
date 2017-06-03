@@ -27,7 +27,6 @@ from .forms import (
     SignupForm,
     UserTokenForm,
 )
-from .models import EmailAddress, EmailConfirmation, EmailConfirmationHMAC
 from .utils import (
     complete_signup,
     get_login_redirect_url,
@@ -331,6 +330,7 @@ class ConfirmEmailView(TemplateResponseMixin, View):
         return None
 
     def get_object(self, queryset=None):
+        from .models import EmailConfirmation, EmailConfirmationHMAC
         key = self.kwargs['key']
         emailconfirmation = EmailConfirmationHMAC.from_key(key)
         if not emailconfirmation:
@@ -343,6 +343,7 @@ class ConfirmEmailView(TemplateResponseMixin, View):
         return emailconfirmation
 
     def get_queryset(self):
+        from .models import EmailConfirmation
         qs = EmailConfirmation.objects.all_valid()
         qs = qs.select_related("email_address__user")
         return qs
@@ -415,6 +416,7 @@ class EmailView(AjaxCapableProcessFormViewMixin, FormView):
         return res
 
     def _action_send(self, request, *args, **kwargs):
+        from allauth.account.models import EmailAddress
         email = request.POST["email"]
         try:
             email_address = EmailAddress.objects.get(
@@ -433,6 +435,7 @@ class EmailView(AjaxCapableProcessFormViewMixin, FormView):
             pass
 
     def _action_remove(self, request, *args, **kwargs):
+        from allauth.account.models import EmailAddress
         email = request.POST["email"]
         try:
             email_address = EmailAddress.objects.get(
@@ -462,6 +465,7 @@ class EmailView(AjaxCapableProcessFormViewMixin, FormView):
             pass
 
     def _action_primary(self, request, *args, **kwargs):
+        from allauth.account.models import EmailAddress
         email = request.POST["email"]
         try:
             email_address = EmailAddress.objects.get_for_user(

@@ -1,4 +1,3 @@
-from allauth.account.models import EmailAddress
 from allauth.socialaccount.app_settings import QUERY_EMAIL
 from allauth.socialaccount.providers.base import AuthAction, ProviderAccount
 from allauth.socialaccount.providers.oauth2.provider import OAuth2Provider
@@ -48,6 +47,7 @@ class GoogleProvider(OAuth2Provider):
                     first_name=data.get('given_name'))
 
     def extract_email_addresses(self, data):
+        from allauth.account.models import EmailAddress
         ret = []
         email = data.get('email')
         if email and data.get('verified_email'):
