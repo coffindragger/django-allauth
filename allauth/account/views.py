@@ -161,7 +161,9 @@ class LoginView(RedirectAuthenticatedUserMixin,
         ret.update({"signup_url": signup_url,
                     "site": site,
                     "redirect_field_name": self.redirect_field_name,
-                    "redirect_field_value": redirect_field_value})
+                    "redirect_field_value": redirect_field_value,
+                    "ACCOUNT_ENABLED": app_settings.ACCOUNT_ENABLED,
+                    })
         return ret
 
 

@@ -319,6 +319,11 @@ class AppSettings(object):
                 ret = []
         return ret
 
+    @property
+    def ACCOUNT_ENABLED(self):
+        from django.conf import settings
+        return 'allauth.account' in settings.INSTALLED_APPS
+
 
 # Ugly? Guido recommends this himself ...
 # http://mail.python.org/pipermail/python-ideas/2012-May/014969.html
