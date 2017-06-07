@@ -217,19 +217,21 @@ class SocialLogin(object):
         else:
             token = None
 
+
+        ret = SocialLogin()
+        ret.token = token
+        ret.account = account
+        ret.user = user
+        ret.state = data['state']
+
         if account_settings.ACCOUNT_ENABLED:
             from allauth.account.models import EmailAddress
             email_addresses = []
             for ea in data['email_addresses']:
                 email_address = deserialize_instance(EmailAddress, ea)
                 email_addresses.append(email_address)
+            ret.email_addresses = email_addresses
 
-        ret = SocialLogin()
-        ret.token = token
-        ret.account = account
-        ret.user = user
-        ret.email_addresses = email_addresses
-        ret.state = data['state']
         return ret
 
     def save(self, request, connect=False):
